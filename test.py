@@ -1,2 +1,4 @@
-from cs50 import get_string
+inp = input('Europe floor?')
 
+usf = int(inp) + 1
+print(f'US floor, {usf}')
