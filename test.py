@@ -8,11 +8,11 @@ headers = {
 }
 
 base_url = 'https://rayon.in.ua/news'
-max_page = 5705 
-page_number = 1 
-wait_time = 5 
+max_page = 5715 
+page_number = 5700 
+wait_time = 0.1 
 
-csv_file = open('news.csv', 'w', encoding='utf-8', newline='')
+csv_file = open('news3.csv', 'w', encoding='utf-8', newline='')
 writer = csv.writer(csv_file)
 writer.writerow(['title', 'description', 'date', 'url'])
 
