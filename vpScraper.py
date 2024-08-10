@@ -35,21 +35,26 @@ with open('news_volynpost_archive.csv', 'w', encoding='utf-8', newline='') as cs
                 # Extract the URL, title, description, and date for each news item
                 link_tag = item.find('a', href=True)
                 if not link_tag:
-                    continue  # Skip if no title is found
+                    continue  # Skip if no link is found
                 
-                title = link_tag.get_text(strip=True)
                 news_url = link_tag['href']
 
-                # Find the date and description within the content div
+                # Find the content div
                 content_div = item.find('div', class_='content')
                 if not content_div:
                     continue  # Skip if content div is not found
 
-                date_div = content_div.find('div', class_='date')
-                date_text = date_div.get_text(strip=True) if date_div else ''
+                # Extract title from the link tag inside content div
+                title_tag = content_div.find('a', href=True)
+                title = title_tag.get_text(strip=True) if title_tag else 'No title found'
 
+                # Extract date
+                date_div = content_div.find('div', class_='date')
+                date_text = date_div.get_text(strip=True) if date_div else 'No date found'
+
+                # Extract description
                 description_div = content_div.find_all('div')[1]  # Get the second div inside content
-                description = description_div.get_text(strip=True) if description_div else ''
+                description = description_div.get_text(strip=True) if description_div else 'No description found'
 
                 writer.writerow([
                     title,
