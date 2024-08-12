@@ -8,7 +8,6 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
 }
 
-# Date range
 start_date = datetime.strptime('03-03-2023', '%d-%m-%Y')
 end_date = datetime.strptime('31-07-2024', '%d-%m-%Y')
 date_format = '%d-%m-%Y'
