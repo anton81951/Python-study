@@ -1,17 +1,36 @@
-import csv
+import json
+import pandas as pd
 
-txt_file_path = r'C:\Users\anton\OneDrive\Documents\GitHub\Python-study\edraa_opendata_text.txt'
-csv_file_path = r'C:\Users\anton\OneDrive\Documents\GitHub\Python-study\edraa_opendata_text.csv'
+file_path = r"C:\Users\User\Downloads\1580.lutskrada.gov.ua.json"
+output_csv = r"C:\Users\User\Downloads\1580.lutskrada.gov.ua.csv"
 
-with open(txt_file_path, 'r', encoding='utf-8') as txt_file, open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
-    # Create a CSV writer object
-    writer = csv.writer(csv_file)
-    
-    for line in txt_file:
-        stripped_line = line.strip()
-        
-        columns = stripped_line.split(',')
-        
-        writer.writerow(columns)
+# 1. Завантажуємо JSON для аналізу структури
+with open(file_path, "r", encoding="utf-8") as f:
+    data = json.load(f)
 
-print(f"Data successfully converted to {csv_file_path}")
+# 2. Виводимо структуру у консоль для перевірки
+print("--- Тип кореневого елемента ---")
+print(type(data))
+
+if isinstance(data, dict):
+    print("\n--- Ключі верхнього рівня ---")
+    print(list(data.keys()))
+elif isinstance(data, list) and len(data) > 0:
+    print("\n--- Ключі першого елемента списку ---")
+    if isinstance(data[0], dict):
+        print(list(data[0].keys()))
+
+# 3. Трансформуємо в CSV
+# json_normalize автоматично розгортає вкладені словники/об'єкти
+if isinstance(data, list):
+    df = pd.json_normalize(data)
+elif isinstance(data, dict):
+    # Якщо основні дані лежать у якомусь конкретному ключі (наприклад, data['data'] або data['items'])
+    # pandas спробує розгорнути весь словник:
+    df = pd.json_normalize(data)
+
+# 4. Зберігаємо в CSV з кодуванням utf-8-sig (щоб коректно відкривалося в Excel з кирилицею)
+df.to_csv(output_csv, index=False, encoding="utf-8-sig", sep=";")
+
+print(f"\nФайл успішно збережено в: {output_csv}")
+print(f"Розмірність таблиці: {df.shape[0]} рядків, {df.shape[1]} колонок.")
